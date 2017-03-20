@@ -29,6 +29,8 @@ public:
 	int end;
 	int cost;
 	int bandwidth;
+	int costIndex;
+	int costBand;
 	Node(int _start,int _end,int _bandwidth,int _cost){
 		vector<Node*> nodes(0);
 		start = _start;
@@ -37,6 +39,8 @@ public:
 		bandwidth = _bandwidth;
 		connectNodes = nodes;
 		connectNodeCounts=0;
+		costIndex = -1;
+		costBand = 0;
 	}
 
 	Node(const Node &node){
@@ -77,7 +81,8 @@ public:
 		graphInfo = get_info(input_lines);
 
 		Node* currentnode = NULL;
-		int endline = graphInfo.nodeCount+4;
+		int endline = graphInfo.links+4;
+		//net node
 		for(int i = 4;i<endline;i++){
 			int start = *input_lines.at(i);
 			int end = *(input_lines.at(i)+1);
@@ -93,18 +98,62 @@ public:
 				graphList.push_back(node);
 			}
 		}
+
+		//cost node should be considered as a special net node with setting nodeIndex >0
+		int startline = endline+1;
+		cout<<startline<<endl;
+		int atIndex = -1;
+		endline = startline+graphInfo.costNode;
+		for(int i = startline;i<endline;i++){
+			atIndex = *(input_lines.at(i)+1);
+			cout<<atIndex<<endl;
+			Node *tem = graphList.at(atIndex);
+			tem->costIndex = *input_lines.at(i);
+			tem->costBand = *((input_lines.at(i))+2);
+		}
+		
 	}
-	// ~Graph(){
+
+	Graph(const Graph &graph){
+		graphInfo = graph.graphInfo;
+		Node* currentnode = NULL;
+		graphList = vector<Node*>(graph.graphList);
+	}
+
+	Graph& operator =(const Graph &graph){
+		if(this != &graph){
+			graphInfo = graph.graphInfo;
+			Node* currentnode = NULL;
+			graphList = vector<Node*>(graph.graphList);
+		}
+		return *this;
+	}
+
+	~Graph(){
+		int size = graphList.size();
+		for(int i = 0;i<size;i++){
+			delete graphList.at(i);
+		}
+	}
+
+	// void showGraph(const Graph &graph){
+	// 	cout<<"net nodes: "<<graph.graphInfo.nodeCount<<" net links: "<<graph.graphInfo.links<<" net links: "<<graph.graphInfo.costNode<<endl;
+	// 	int length = graph.graphList.size();
+	// 	for(int i = 0;i<length;i++){
+	// 		Node *tem = graph.graphList.at(i);
+	// 		cout<<"node start: "<<tem->start<<" node end: "<<tem->end<<" node cost"<<tem->cost<<
+	// 		" node bandwidth: "<<tem->bandwidth<<" node linkscount: "<<tem->connectNodeCounts<<endl;
+	// 	}
 
 	// }
 };
 
 #ifdef DEBUG
 
-int main(int argc,char** argv){
-	Node n(0,1,1,2);
-	Node m = n;
-	return 0;
-}
+// int main(int argc,char** argv){
+// 	Node n(0,1,1,2);
+// 	Node m = n;
+// 	return 0;
+// }
 
 #endif
