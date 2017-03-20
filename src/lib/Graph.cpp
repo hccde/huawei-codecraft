@@ -31,7 +31,8 @@ public:
 	int bandwidth;
 	int costIndex;
 	int costBand;
-	Node(int _start,int _end,int _bandwidth,int _cost){
+	Node(int _start,int _end,int _bandwidth,int _cost):start(-1),end(-1),
+	bandwidth(0),cost(0){
 		vector<Node*> nodes(0);
 		start = _start;
 		cost = _cost;
@@ -60,12 +61,11 @@ public:
 			cost = node.cost;
 			end = node.end;
 			bandwidth = node.bandwidth;
-			connectNodes = nodes;
+			connectNodes = node.connectNodes;
 			connectNodeCounts=node.connectNodeCounts;
 		}
 		return *this;
 	}
-
 	int connect(Node* node){
 		connectNodeCounts++;
 		connectNodes.push_back(node);
@@ -79,7 +79,7 @@ public:
 	GraphInfo graphInfo;
 	Graph(vector<int*>input_lines){
 		graphInfo = get_info(input_lines);
-
+		matrixGraph(input_lines);
 		Node* currentnode = NULL;
 		int endline = graphInfo.links+4;
 		//net node
@@ -100,17 +100,17 @@ public:
 		}
 
 		//cost node should be considered as a special net node with setting nodeIndex >0
-		int startline = endline+1;
-		cout<<startline<<endl;
-		int atIndex = -1;
-		endline = startline+graphInfo.costNode;
-		for(int i = startline;i<endline;i++){
-			atIndex = *(input_lines.at(i)+1);
-			cout<<atIndex<<endl;
-			Node *tem = graphList.at(atIndex);
-			tem->costIndex = *input_lines.at(i);
-			tem->costBand = *((input_lines.at(i))+2);
-		}
+		// int startline = endline+1;
+		// cout<<startline<<endl;
+		// int atIndex = -1;
+		// endline = startline+graphInfo.costNode;
+		// for(int i = startline;i<endline;i++){
+		// 	atIndex = *(input_lines.at(i)+1);
+		// 	cout<<atIndex<<endl;
+		// 	Node *tem = graphList.at(atIndex);
+		// 	tem->costIndex = *input_lines.at(i);
+		// 	tem->costBand = *((input_lines.at(i))+2);
+		// }
 		
 	}
 
@@ -135,7 +135,34 @@ public:
 			delete graphList.at(i);
 		}
 	}
+	Node** matrixGraph(vector<int*>input_lines){
 
+		int endline = graphInfo.links+4;
+		int nodes = graphInfo.nodeCount;
+		Node** matrix = new Node* [nodes];
+
+		for(int i =0;i<nodes;i++){
+			Node** tem = new Node*[nodes];
+			*(matrix+i) = *tem;
+		}
+
+		// for(int i = 4;i<endline;i++){
+		// 	int start = *input_lines.at(i);
+		// 	int end = *(input_lines.at(i)+1);
+		// 	int cost = *(input_lines.at(i)+2);
+		// 	int bandwidth = *(input_lines.at(i)+3);
+		// 	Node *node = new Node(start,end,bandwidth,cost);
+		// 	cout<<start<<" "<<end<<endl;
+		// 	*(*(matrix+start)+end) = *node;
+		// }
+		Node* tem = new Node(0,0,0,0);
+		Node t(0,0,0,0);
+		Node *m =&(**matrix);
+		m = tem;
+		cout<<m->start<<endl;
+		return matrix;
+
+	}
 	// void showGraph(const Graph &graph){
 	// 	cout<<"net nodes: "<<graph.graphInfo.nodeCount<<" net links: "<<graph.graphInfo.links<<" net links: "<<graph.graphInfo.costNode<<endl;
 	// 	int length = graph.graphList.size();
