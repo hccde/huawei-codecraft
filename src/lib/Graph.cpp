@@ -77,10 +77,12 @@ class Graph{
 public:
 	vector<Node*> graphList;
 	GraphInfo graphInfo;
+	Node*** graphArray;
+	vector<int*>inputLines;
 	Graph(vector<int*>input_lines){
 		graphInfo = get_info(input_lines);
-		Node*** graph = matrixGraph(input_lines);
-	
+		graphArray = matrixGraph(input_lines);
+		inputLines = input_lines;
 		int length = graphInfo.nodeCount;
 		Node *currentnode = NULL;
 		for(int i = 0;i<length;i++){
@@ -88,7 +90,7 @@ public:
 			currentnode = NULL;
 			Node *node = NULL;
 			for(int j = 0;j<length;j++){
-				node  = *(*(graph+i)+j);
+				node  = *(*(graphArray+i)+j);
 				if(node != NULL){
 					if(isHead){
 						graphList.push_back(node);
@@ -125,18 +127,26 @@ public:
 	Graph& operator =(const Graph &graph){
 		if(this != &graph){
 			graphInfo = graph.graphInfo;
-			Node* currentnode = NULL;
+			inputLines = graph.inputLines;
+			graphArray = matrixGraph(graph.inputLines);
 			graphList = vector<Node*>(graph.graphList);
+
 		}
 		return *this;
 	}
 
 	~Graph(){
-		int size = graphList.size();
-		for(int i = 0;i<size;i++){
-			delete graphList.at(i);
+		int length = graphInfo.nodeCount;
+		for(int i = 0;i<length;i++){
+			for(int j = 0;j<length;j++){
+				if(*(*(graphArray+i)+j) != NULL){
+					delete *(*(graphArray+i)+j);
+				}
+			}
+			delete *(graphArray+i);
 		}
-		//todo
+		delete graphArray;
+		graphList.clear();
 	}
 
 	Node*** matrixGraph(vector<int*>input_lines){
