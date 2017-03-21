@@ -87,18 +87,15 @@ public:
 			bool isHead = true;
 			currentnode = NULL;
 			Node *node = NULL;
-			// node = new Node(0,0,0,0);
-			// graphList.push_back(node);
 			for(int j = 0;j<length;j++){
 				node  = *(*(graph+i)+j);
 				if(node != NULL){
-					cout<<node->start<<endl;
 					if(isHead){
-						// graphList.push_back(node);
+						graphList.push_back(node);
 						isHead = false;
 						currentnode = node;
 					}else{
-						// currentnode->connect(node);
+						currentnode->connect(node);
 					}
 				}
 			}
