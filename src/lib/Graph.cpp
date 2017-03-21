@@ -79,10 +79,13 @@ public:
 	GraphInfo graphInfo;
 	Node*** graphArray;
 	vector<int*>inputLines;
+	Node** costList;
 	Graph(vector<int*>input_lines){
 		graphInfo = get_info(input_lines);
 		graphArray = matrixGraph(input_lines);
 		inputLines = input_lines;
+		costList = costNodeList(input_lines);
+
 		int length = graphInfo.nodeCount;
 		Node *currentnode = NULL;
 		for(int i = 0;i<length;i++){
@@ -120,7 +123,9 @@ public:
 
 	Graph(const Graph &graph){
 		graphInfo = graph.graphInfo;
-		Node* currentnode = NULL;
+		inputLines = graph.inputLines;
+		graphArray = matrixGraph(graph.inputLines);
+		costList = costNodeList(graph.inputLines);
 		graphList = vector<Node*>(graph.graphList);
 	}
 
@@ -129,6 +134,7 @@ public:
 			graphInfo = graph.graphInfo;
 			inputLines = graph.inputLines;
 			graphArray = matrixGraph(graph.inputLines);
+			costList = costNodeList(graph.inputLines);
 			graphList = vector<Node*>(graph.graphList);
 
 		}
@@ -147,6 +153,25 @@ public:
 		}
 		delete graphArray;
 		graphList.clear();
+
+		delete []costList;
+	}
+
+	Node** costNodeList(vector<int*>input_lines){
+		int startline = graphInfo.links+4+1;
+		int costNode = graphInfo.costNode;
+		int endline = startline+graphInfo.costNode;
+		Node** costNodelist = new Node* [costNode];
+		int _end=-1,_start=-1,_bandwidth=-1;
+		int _index = startline;
+		for(int i=0;i<costNode;i++){
+			_index = i+startline;
+			_end = *(input_lines.at(_index)+1);
+			_start = *input_lines.at(_index);
+			_bandwidth = *((input_lines.at(_index))+2);
+			costNodelist[i] = new Node(_start,_end,_bandwidth,0);
+		}
+		return costNodelist;
 	}
 
 	Node*** matrixGraph(vector<int*>input_lines){
@@ -184,6 +209,14 @@ public:
 			" node bandwidth: "<<tem->bandwidth<<" node linkscount: "<<tem->connectNodeCounts<<endl;
 		}
 
+	}
+	void showcostList(const Graph &graph){
+		cout<<"costList:"<<graph.graphInfo.costNode<<endl;
+		Node** list = graph.costList;
+		for(int i = 0;i<graph.graphInfo.costNode;i++){
+			cout<<"costnodeIndex: "<<list[i]->start<<" connect to graph index: "<<list[i]->end<<
+			" bandwidth "<<list[i]->bandwidth<<endl;
+		}
 	}
 };
 

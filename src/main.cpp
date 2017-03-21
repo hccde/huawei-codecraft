@@ -10,8 +10,8 @@ int main(int argc,char**argv){
 
 	//build graph using input file
 	Graph* graph = new Graph(input_lines);
-	// graph.showGraph(graph);
-	graph->~Graph();
-	
+	// graph->~Graph();
+	graph->showcostList(*graph);
+
     return 0;
 }
