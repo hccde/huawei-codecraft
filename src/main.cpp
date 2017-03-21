@@ -10,6 +10,6 @@ int main(int argc,char**argv){
 
 	//build graph using input file
 	Graph graph(input_lines);
-	// graph.showGraph(graph);
+	graph.showGraph(graph);
     return 0;
 }
