@@ -31,8 +31,7 @@ public:
 	int bandwidth;
 	int costIndex;
 	int costBand;
-	Node(int _start,int _end,int _bandwidth,int _cost):start(-1),end(-1),
-	bandwidth(0),cost(0){
+	Node(int _start,int _end,int _bandwidth,int _cost){
 		vector<Node*> nodes(0);
 		start = _start;
 		cost = _cost;
@@ -105,20 +104,6 @@ public:
 				}
 			}
 		}
-
-		//cost node should be considered as a special net node with setting nodeIndex >0
-		// int startline = endline+1;
-		// cout<<startline<<endl;
-		// int atIndex = -1;
-		// endline = startline+graphInfo.costNode;
-		// for(int i = startline;i<endline;i++){
-		// 	atIndex = *(input_lines.at(i)+1);
-		// 	cout<<atIndex<<endl;
-		// 	Node *tem = graphList.at(atIndex);
-		// 	tem->costIndex = *input_lines.at(i);
-		// 	tem->costBand = *((input_lines.at(i))+2);
-		// }
-		
 	}
 
 	Graph(const Graph &graph){
@@ -199,6 +184,7 @@ public:
 		}
 		return matrix;
 	}
+
 	void showGraph(const Graph &graph){
 		cout<<"net nodes: "<<graph.graphInfo.nodeCount<<" net links: "<<graph.graphInfo.links<<" net links: "<<graph.graphInfo.costNode<<endl;
 		int length = graph.graphList.size();
