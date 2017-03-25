@@ -1,9 +1,3 @@
-#define DEBUG	0
-#ifdef DEBUG
-#include <iostream>
-#include <vector>
-using namespace std;
-#endif
 typedef struct global_info {
 	int nodeCount;
 	int links;
@@ -205,13 +199,3 @@ public:
 		}
 	}
 };
-
-#ifdef DEBUG
-
-// int main(int argc,char** argv){
-// 	Node n(0,1,1,2);
-// 	Node m = n;
-// 	return 0;
-// }
-
-#endif
